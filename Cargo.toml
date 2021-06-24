@@ -1,8 +1,15 @@
 [package]
 name = "d3d12-rs"
-version = "0.1.0"
-authors = ["Chris Ohk <utilforever@gmail.com>"]
+version = "0.0.1"
+authors = [
+    "Chris Ohk <utilforever@gmail.com>",
+    "Oxide Engine"
+]
 edition = "2018"
+description = "Rust wrapper for D3D12"
+
+readme = "README.md"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
