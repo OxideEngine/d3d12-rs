@@ -16,3 +16,4 @@ license = "MIT"
 [dependencies]
 windows = "0.18.0"
 bindings = { path = "bindings" }
+array-init = "2.0.0"
