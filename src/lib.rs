@@ -7,7 +7,7 @@ use bindings::Windows::Win32::{
 use std::mem::transmute;
 use windows::*;
 
-trait DXSample {
+pub trait DXSample {
     fn new(command_line: &SampleCommandLine) -> Result<Self>
     where
         Self: Sized;
@@ -29,11 +29,11 @@ trait DXSample {
 }
 
 #[derive(Clone)]
-struct SampleCommandLine {
+pub struct SampleCommandLine {
     use_warp_device: bool,
 }
 
-fn build_command_line() -> SampleCommandLine {
+pub fn build_command_line() -> SampleCommandLine {
     let mut use_warp_device = false;
 
     for arg in std::env::args() {
@@ -45,7 +45,7 @@ fn build_command_line() -> SampleCommandLine {
     SampleCommandLine { use_warp_device }
 }
 
-fn run_sample<S>() -> Result<()>
+pub fn run_sample<S>() -> Result<()>
 where
     S: DXSample,
 {
@@ -201,7 +201,7 @@ extern "system" fn wndproc<S: DXSample>(
     }
 }
 
-fn get_hardware_adapter(factory: &IDXGIFactory4) -> Result<IDXGIAdapter1> {
+pub fn get_hardware_adapter(factory: &IDXGIFactory4) -> Result<IDXGIAdapter1> {
     for i in 0.. {
         let adapter = unsafe { factory.EnumAdapters1(i)? };
 
@@ -256,7 +256,7 @@ mod d3d12_hello_triangle {
         resources: Option<Resources>,
     }
 
-    struct Resources {
+    pub struct Resources {
         command_queue: ID3D12CommandQueue,
         swap_chain: IDXGISwapChain3,
         frame_index: u32,
@@ -462,7 +462,7 @@ mod d3d12_hello_triangle {
         }
     }
 
-    fn populate_command_list(resources: &Resources) -> Result<()> {
+    pub fn populate_command_list(resources: &Resources) -> Result<()> {
         // Command list allocators can only be reset when the associated
         // command lists have finished execution on the GPU; apps should use
         // fences to determine GPU execution progress.
@@ -527,7 +527,7 @@ mod d3d12_hello_triangle {
         unsafe { command_list.Close() }
     }
 
-    fn transition_barrier(
+    pub fn transition_barrier(
         resource: &ID3D12Resource,
         state_before: D3D12_RESOURCE_STATES,
         state_after: D3D12_RESOURCE_STATES,
@@ -547,7 +547,7 @@ mod d3d12_hello_triangle {
         }
     }
 
-    fn create_device(command_line: &SampleCommandLine) -> Result<(IDXGIFactory4, ID3D12Device)> {
+    pub fn create_device(command_line: &SampleCommandLine) -> Result<(IDXGIFactory4, ID3D12Device)> {
         if cfg!(debug_assertions) {
             unsafe {
                 if let Ok(debug) = D3D12GetDebugInterface::<ID3D12Debug>() {
@@ -574,7 +574,7 @@ mod d3d12_hello_triangle {
         Ok((dxgi_factory, device))
     }
 
-    fn create_root_signature(device: &ID3D12Device) -> Result<ID3D12RootSignature> {
+    pub fn create_root_signature(device: &ID3D12Device) -> Result<ID3D12RootSignature> {
         let desc = D3D12_ROOT_SIGNATURE_DESC {
             Flags: D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT,
             ..Default::default()
@@ -597,7 +597,7 @@ mod d3d12_hello_triangle {
         }
     }
 
-    fn create_pipeline_state(
+    pub fn create_pipeline_state(
         device: &ID3D12Device,
         root_signature: &ID3D12RootSignature,
     ) -> Result<ID3D12PipelineState> {
@@ -724,7 +724,7 @@ mod d3d12_hello_triangle {
         unsafe { device.CreateGraphicsPipelineState(&desc) }
     }
 
-    fn create_vertex_buffer(
+    pub fn create_vertex_buffer(
         device: &ID3D12Device,
         aspect_ratio: f32,
     ) -> Result<(ID3D12Resource, D3D12_VERTEX_BUFFER_VIEW)> {
@@ -795,12 +795,12 @@ mod d3d12_hello_triangle {
     }
 
     #[repr(C)]
-    struct Vertex {
+    pub struct Vertex {
         position: [f32; 3],
         color: [f32; 4],
     }
 
-    fn wait_for_previous_frame(resources: &mut Resources) {
+    pub fn wait_for_previous_frame(resources: &mut Resources) {
         // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST
         // PRACTICE. This is code implemented as such for simplicity. The
         // D3D12HelloFrameBuffering sample illustrates how to use fences for
@@ -832,7 +832,7 @@ mod d3d12_hello_triangle {
     }
 }
 
-fn render_triangle() -> Result<()> {
+pub fn render_triangle() -> Result<()> {
     run_sample::<d3d12_hello_triangle::Sample>()?;
 
     Ok(())
