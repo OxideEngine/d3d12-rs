@@ -434,14 +434,6 @@ mod d3d12_hello_triangle {
             Ok(())
         }
 
-        fn title(&self) -> String {
-            "D3D12 Hello Triangle".into()
-        }
-
-        fn window_size(&self) -> (i32, i32) {
-            (1280, 720)
-        }
-
         fn render(&mut self) {
             if let Some(resources) = &mut self.resources {
                 populate_command_list(&resources).unwrap();
@@ -459,6 +451,14 @@ mod d3d12_hello_triangle {
 
                 wait_for_previous_frame(resources);
             }
+        }
+
+        fn title(&self) -> String {
+            "D3D12 Hello Triangle".into()
+        }
+
+        fn window_size(&self) -> (i32, i32) {
+            (1280, 720)
         }
     }
 
